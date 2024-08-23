@@ -1,18 +1,18 @@
 """Console script for pysopfeu."""
 
 import click
-import json
-from pysopfeu import wms_to_json, construct_wms_url
+
+from pysopfeu import construct_wms_url, wms_to_json
+
 
 @click.command(context_settings={"help_option_names": ["-h", "--help"]})
-@click.option('--lat', type=float, help='Latitude in EPSG:4326')
-@click.option('--lon', type=float, help='Longitude in EPSG:4326')
-@click.option('--width', type=int, default=10, help='Width of the image (default: 10)')
-@click.option('--height', type=int, default=10, help='Height of the image (default: 10)')
-@click.option('--output', type=click.Path(), help='Output file to save the JSON data')
-@click.option('--show-url', is_flag=True, help='Show the generated WMS URL and exit')
-def main(lat, lon, width, height, output, show_url):
-
+@click.option("--lat", type=float, help="Latitude in EPSG:4326")
+@click.option("--lon", type=float, help="Longitude in EPSG:4326")
+@click.option("--width", type=int, default=10, help="Width of the image (default: 10)")
+@click.option("--height", type=int, default=10, help="Height of the image (default: 10)")
+@click.option("--output", type=click.Path(), help="Output file to save the JSON data")
+@click.option("--show-url", is_flag=True, help="Show the generated WMS URL and exit")
+def main(lat: float, lon: float, width: int, height: int, output: str, show_url: bool) -> None:
     # If no parameters are provided, display the introductory message and help
     if not any([lat, lon, output, show_url]):
         click.echo("pysopfeu")
@@ -38,7 +38,7 @@ def main(lat, lon, width, height, output, show_url):
 
         if output:
             # Save the output to a file
-            with open(output, 'w', encoding='utf-8') as f:
+            with open(output, "w", encoding="utf-8") as f:
                 f.write(json_data)
             click.echo(f"Les données ont été enregistrées dans {output}")
         else:
@@ -47,6 +47,7 @@ def main(lat, lon, width, height, output, show_url):
 
     except Exception as e:
         click.echo(f"Une erreur s'est produite : {e}", err=True)
+
 
 if __name__ == "__main__":
     main()  # pragma: no cover
