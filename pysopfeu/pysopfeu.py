@@ -2,19 +2,18 @@
 
 import json
 import urllib.parse
-import xml.etree.ElementTree as ET
-from typing import Tuple
 
+import defusedxml.ElementTree as ET
 import requests
 
 
-def generate_bbox(lat: float, lon: float, buffer: float = 0.0001) -> Tuple[float, float, float, float]:
+def generate_bbox(lat: float, lon: float, buffer: float = 0.0000000000001) -> tuple[float, float, float, float]:
     """
     Generate a tight bounding box around the given latitude and longitude.
 
     :param lat: Latitude in EPSG:4326.
     :param lon: Longitude in EPSG:4326.
-    :param buffer: Buffer distance to create the bounding box (default is 0.0001 degrees).
+    :param buffer: Buffer distance to create the bounding box (default is 0.0000000000001 degrees).
     :return: A tuple representing the bounding box (min_lon, min_lat, max_lon, max_lat).
     """
     min_lat = lat - buffer
@@ -55,21 +54,21 @@ def construct_wms_url(lat: float, lon: float, width: int, height: int) -> str:
 
 
 def fetch_wms_data(url: str) -> str:
-    response = requests.get(url)
+    response = requests.get(url, timeout=5)
     response.raise_for_status()  # Raise an exception for HTTP errors
     return response.text
 
 
 def parse_wms_response(xml_data: str) -> dict:
     root = ET.fromstring(xml_data)
-    feature = root.find('.//danger_incendie_feature')
+    feature = root.find(".//danger_incendie_feature")
     if feature is not None:
         data = {
-            "nom": feature.findtext('.//nom'),
-            "numero": feature.findtext('.//numero'),
-            "indice": feature.findtext('.//indice'),
-            "indice_demain": feature.findtext('.//indice_demain'),
-            "indice_apres_demain": feature.findtext('.//indice_apres_demain'),
+            "nom": feature.findtext(".//nom"),
+            "numero": feature.findtext(".//numero"),
+            "indice": feature.findtext(".//indice"),
+            "indice_demain": feature.findtext(".//indice_demain"),
+            "indice_apres_demain": feature.findtext(".//indice_apres_demain"),
         }
         return data
     return {}
