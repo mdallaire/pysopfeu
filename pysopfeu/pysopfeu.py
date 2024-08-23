@@ -3,7 +3,7 @@
 import json
 import urllib.parse
 
-import defusedxml.ElementTree as ET
+import defusedxml.ElementTree as ET  # type: ignore[import-untyped]
 import requests
 
 
